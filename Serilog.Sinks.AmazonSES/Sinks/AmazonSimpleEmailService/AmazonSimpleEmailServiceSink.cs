@@ -24,7 +24,7 @@ using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Sinks.PeriodicBatching;
 
-namespace Serilog.Sinks.AmazonSES
+namespace Serilog.Sinks.AmazonSimpleEmailService
 {
     public class AmazonSimpleEmailServiceSink : PeriodicBatchingSink
     {

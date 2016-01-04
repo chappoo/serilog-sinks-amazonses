@@ -15,9 +15,8 @@
 using System;
 using Serilog.Configuration;
 using Serilog.Events;
-using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using Serilog.Sinks.AmazonSES;
+using Serilog.Sinks.AmazonSimpleEmailService;
 
 namespace Serilog
 {

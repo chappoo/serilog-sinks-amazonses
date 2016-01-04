@@ -16,7 +16,7 @@ using System.ComponentModel;
 using Amazon;
 using Amazon.Runtime;
 
-namespace Serilog.Sinks.AmazonSES
+namespace Serilog.Sinks.AmazonSimpleEmailService
 {
     public class AmazonSimpleEmailServiceConfigInfo
     {

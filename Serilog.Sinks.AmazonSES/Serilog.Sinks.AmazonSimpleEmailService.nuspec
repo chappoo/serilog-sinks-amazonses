@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Serilog.Sinks.AmazonSES</id>
+    <id>Serilog.Sinks.AmazonSimpleEmailService</id>
     <version>$version$</version>
     <authors>Serilog Contributors</authors>
     <description>Serilog event sink that sends email via Amazon SES.</description>
