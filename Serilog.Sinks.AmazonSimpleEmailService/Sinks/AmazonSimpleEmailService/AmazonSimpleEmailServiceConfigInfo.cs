@@ -59,11 +59,6 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         public string EmailSubject { get; set; }
 
         /// <summary>
-        /// The SMTP email server to use.
-        /// </summary>
-        public string MailServer { get; set; }
-
-        /// <summary>
         /// Sets whether the body contents of the email is HTML. Defaults to false.
         /// </summary>
         public bool IsBodyHtml { get; set; }
