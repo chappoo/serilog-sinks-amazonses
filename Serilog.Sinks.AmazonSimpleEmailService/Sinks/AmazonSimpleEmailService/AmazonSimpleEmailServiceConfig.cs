@@ -18,9 +18,9 @@ using Amazon.Runtime;
 
 namespace Serilog.Sinks.AmazonSimpleEmailService
 {
-    public class AmazonSimpleEmailServiceConfigInfo
+    public class AmazonSimpleEmailServiceConfig
     {
-        public AmazonSimpleEmailServiceConfigInfo()
+        public AmazonSimpleEmailServiceConfig()
         {
             EmailSubject = DefaultSubject;
             IsBodyHtml = false;

@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sinks\AmazonSimpleEmailService\AmazonSimpleEmailServiceConfigInfo.cs" />
+    <Compile Include="Sinks\AmazonSimpleEmailService\AmazonSimpleEmailServiceConfig.cs" />
     <Compile Include="Sinks\AmazonSimpleEmailService\AmazonSimpleEmailServiceSink.cs" />
     <Compile Include="LoggerConfigurationAmazonSimpleEmailServiceExtensions.cs" />
   </ItemGroup>

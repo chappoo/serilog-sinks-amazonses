@@ -43,21 +43,21 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         /// </summary>
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(30);
 
-        private readonly AmazonSimpleEmailServiceConfigInfo _configInfo;
+        private readonly AmazonSimpleEmailServiceConfig _config;
 
         /// <summary>
         /// Construct a sink emailing via Amazon SES with the specified details.
         /// </summary>
-        /// <param name="configInfo">Connection information used to construct the Amazon SES client and mail messages.</param>
+        /// <param name="config">Configuration used to construct the Amazon SES client and mail messages.</param>
         /// <param name="batchSizeLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="textFormatter">Supplies culture-specific formatting information, or null.</param>
-        public AmazonSimpleEmailServiceSink(AmazonSimpleEmailServiceConfigInfo configInfo, int batchSizeLimit, TimeSpan period, ITextFormatter textFormatter)
+        public AmazonSimpleEmailServiceSink(AmazonSimpleEmailServiceConfig config, int batchSizeLimit, TimeSpan period, ITextFormatter textFormatter)
             : base(batchSizeLimit, period)
         {
-            if (configInfo == null) throw new ArgumentNullException(nameof(configInfo));
+            if (config == null) throw new ArgumentNullException(nameof(config));
 
-            _configInfo = configInfo;
+            _config = config;
             _textFormatter = textFormatter;
             _client = CreateClient();
             _client.AfterResponseEvent += ClientOnAfterResponseEvent;
@@ -104,14 +104,14 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             {
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string>(_configInfo.ToEmail.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    ToAddresses = new List<string>(_config.ToEmail.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 },
-                Message = new Message(new Content(_configInfo.EmailSubject), new Body
+                Message = new Message(new Content(_config.EmailSubject), new Body
                 {
-                    Text = !_configInfo.IsBodyHtml ? new Content(payload.ToString()) : null,
-                    Html = _configInfo.IsBodyHtml ? new Content(payload.ToString()) : null
+                    Text = !_config.IsBodyHtml ? new Content(payload.ToString()) : null,
+                    Html = _config.IsBodyHtml ? new Content(payload.ToString()) : null
                 }),
-                Source = _configInfo.FromEmail
+                Source = _config.FromEmail
             };
 
             _client.SendEmail(request);
@@ -140,14 +140,14 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             {
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string>(_configInfo.ToEmail.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    ToAddresses = new List<string>(_config.ToEmail.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 },
-                Message = new Message(new Content(_configInfo.EmailSubject), new Body
+                Message = new Message(new Content(_config.EmailSubject), new Body
                 {
-                    Text = !_configInfo.IsBodyHtml ? new Content(payload.ToString()) : null,
-                    Html = _configInfo.IsBodyHtml ? new Content(payload.ToString()) : null
+                    Text = !_config.IsBodyHtml ? new Content(payload.ToString()) : null,
+                    Html = _config.IsBodyHtml ? new Content(payload.ToString()) : null
                 }),
-                Source = _configInfo.FromEmail
+                Source = _config.FromEmail
             };
 
             await _client.SendEmailAsync(request);
@@ -156,10 +156,10 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
 
         private AmazonSimpleEmailServiceClient CreateClient()
         {
-            var sesClient = new AmazonSimpleEmailServiceClient(new BasicAWSCredentials(_configInfo.AwsAccessKeyId, _configInfo.AwsSecretKey), new AmazonSimpleEmailServiceConfig
+            var sesClient = new AmazonSimpleEmailServiceClient(new BasicAWSCredentials(_config.AwsAccessKeyId, _config.AwsSecretKey), new Amazon.SimpleEmail.AmazonSimpleEmailServiceConfig
             {
-                RegionEndpoint = _configInfo.RegionEndpoint,
-                SignatureMethod = _configInfo.SignatureMethod
+                RegionEndpoint = _config.RegionEndpoint,
+                SignatureMethod = _config.SignatureMethod
             });
             return sesClient;
         }

@@ -31,33 +31,31 @@ namespace Serilog
         /// Adds a sink that sends log events via email.
         /// </summary>
         /// <param name="loggerConfiguration">The logger configuration.</param>
-        /// <param name="connectionInfo">The connection info used for </param>
+        /// <param name="connection">The connection info used for </param>
         /// <param name="outputTemplate">A message template describing the format used to write to the sink.
         /// the default is "{Timestamp} [{Level}] {Message}{NewLine}{Exception}".</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="batchPostingLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="formatProvider">Supplies culture-specific formatting information, or null.</param>
-        /// <param name="mailSubject">The subject used in error mails</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         public static LoggerConfiguration AmazonSimpleEmailService(
             this LoggerSinkConfiguration loggerConfiguration,
-            AmazonSimpleEmailServiceConfigInfo connectionInfo,
+            AmazonSimpleEmailServiceConfig connection,
             string outputTemplate = DefaultOutputTemplate,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchPostingLimit = AmazonSimpleEmailServiceSink.DefaultBatchPostingLimit,
             TimeSpan? period = null,
-            IFormatProvider formatProvider = null,
-            string mailSubject = AmazonSimpleEmailServiceConfigInfo.DefaultSubject)
+            IFormatProvider formatProvider = null)
         {
-            if (connectionInfo == null) throw new ArgumentNullException(nameof(connectionInfo));
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             var defaultedPeriod = period ?? AmazonSimpleEmailServiceSink.DefaultPeriod;
             var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
 
             return loggerConfiguration.Sink(
-                new AmazonSimpleEmailServiceSink(connectionInfo, batchPostingLimit, defaultedPeriod, formatter),
+                new AmazonSimpleEmailServiceSink(connection, batchPostingLimit, defaultedPeriod, formatter),
                 restrictedToMinimumLevel);
         }
 
