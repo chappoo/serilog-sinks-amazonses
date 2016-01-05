@@ -22,7 +22,7 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
     {
         public AmazonSimpleEmailServiceConfig()
         {
-            EmailSubject = DefaultSubject;
+            EmailSubject = DefaultEmailSubject;
             IsBodyHtml = false;
             RegionEndpoint = DefaultRegionEndpoint;
             SignatureMethod = DefaultSignatureMethod;
@@ -30,7 +30,7 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         /// <summary>
         /// The default subject used for email messages.
         /// </summary>
-        public const string DefaultSubject = "Log Email";
+        public const string DefaultEmailSubject = "Log Email";
 
         /// <summary>
         /// The default region endpoint
@@ -45,17 +45,17 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         /// <summary>
         /// The email address emails will be sent from.
         /// </summary>
-        public string FromEmail { get; set; }
+        public string EmailFrom { get; set; }
 
         /// <summary>
         /// The email address(es) emails will be sent to. Accepts multiple email addresses separated by comma or semicolon.
         /// </summary>
-        public string ToEmail { get; set; }
+        public string EmailTo { get; set; }
 
         /// <summary>
         /// The subject to use for the email.
         /// </summary>
-        [DefaultValue(DefaultSubject)]
+        [DefaultValue(DefaultEmailSubject)]
         public string EmailSubject { get; set; }
 
         /// <summary>
