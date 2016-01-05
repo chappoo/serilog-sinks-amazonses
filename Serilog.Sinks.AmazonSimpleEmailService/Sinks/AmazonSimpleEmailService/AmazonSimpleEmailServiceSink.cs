@@ -104,14 +104,14 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             {
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string>(_config.ToEmail.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    ToAddresses = new List<string>(_config.EmailTo.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 },
                 Message = new Message(new Content(_config.EmailSubject), new Body
                 {
                     Text = !_config.IsBodyHtml ? new Content(payload.ToString()) : null,
                     Html = _config.IsBodyHtml ? new Content(payload.ToString()) : null
                 }),
-                Source = _config.FromEmail
+                Source = _config.EmailFrom
             };
 
             _client.SendEmail(request);
@@ -140,14 +140,14 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             {
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string>(_config.ToEmail.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    ToAddresses = new List<string>(_config.EmailTo.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 },
                 Message = new Message(new Content(_config.EmailSubject), new Body
                 {
                     Text = !_config.IsBodyHtml ? new Content(payload.ToString()) : null,
                     Html = _config.IsBodyHtml ? new Content(payload.ToString()) : null
                 }),
-                Source = _config.FromEmail
+                Source = _config.EmailFrom
             };
 
             await _client.SendEmailAsync(request);
