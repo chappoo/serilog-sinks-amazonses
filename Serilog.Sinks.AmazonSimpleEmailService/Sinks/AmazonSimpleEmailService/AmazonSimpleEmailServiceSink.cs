@@ -45,6 +45,7 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
 
         private readonly AmazonSimpleEmailServiceConfig _config;
 
+        /// <inheritdoc />
         /// <summary>
         /// Construct a sink emailing via Amazon SES with the specified details.
         /// </summary>
@@ -74,6 +75,7 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             SelfLog.WriteLine("Received result {0}", e);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Free resources held by the sink.
         /// </summary>
@@ -118,11 +120,12 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         }
 
 #if NET45
+        /// <inheritdoc />
         /// <summary>
         /// Emit a batch of log events, running asynchronously.
         /// </summary>
         /// <param name="events">The events to emit.</param>
-        /// <remarks>Override either <see cref="PeriodicBatchingSink.EmitBatch"/> or <see cref="PeriodicBatchingSink.EmitBatchAsync"/>,
+        /// <remarks>Override either <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatch(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" /> or <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatchAsync(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />,
         /// not both.</remarks>
         protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
