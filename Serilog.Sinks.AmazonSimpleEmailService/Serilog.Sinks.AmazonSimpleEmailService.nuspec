@@ -12,6 +12,6 @@
     <tags>serilog logging email amazon ses</tags>
   </metadata>
   <files>
-    <file src="bin\$configuration$\$id$.dll" target="lib\net462\" />
+    <file src="bin\$configuration$\Serilog.Sinks.AmazonSimpleEmailService.dll" target="lib\net462\" />
   </files>
 </package>
