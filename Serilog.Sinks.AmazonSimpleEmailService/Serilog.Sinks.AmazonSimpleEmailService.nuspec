@@ -14,4 +14,10 @@
   <files>
     <file src="bin\$configuration$\Serilog.Sinks.AmazonSimpleEmailService.dll" target="lib\net462\" />
   </files>
+  <dependencies>
+    <dependency id="AWSSDK.Core" version="[3.3.17.5,)" />
+    <dependency id="AWSSDK.SimpleEmail" version="[3.3.2,)" />
+    <dependency id="Serilog" version="[2.5.0,)" />
+    <dependency id="Serilog.Sinks.PeriodicBatching" version="[2.1.1,)" />    
+  </dependencies>
 </package>
