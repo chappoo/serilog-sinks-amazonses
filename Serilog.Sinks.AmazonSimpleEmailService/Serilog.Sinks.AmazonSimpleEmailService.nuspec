@@ -11,4 +11,7 @@
     <iconUrl>http://serilog.net/images/serilog-sink-nuget.png</iconUrl>
     <tags>serilog logging email amazon ses</tags>
   </metadata>
+  <files>
+    <file src="bin\$configuration$\$id$.dll" target="lib\net462\" />
+  </files>
 </package>
