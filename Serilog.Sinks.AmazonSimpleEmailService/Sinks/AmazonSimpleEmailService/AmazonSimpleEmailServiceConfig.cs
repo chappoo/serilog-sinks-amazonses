@@ -15,6 +15,7 @@
 using System.ComponentModel;
 using Amazon;
 using Amazon.Runtime;
+using Amazon.SimpleEmail;
 
 namespace Serilog.Sinks.AmazonSimpleEmailService
 {
@@ -24,23 +25,11 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         {
             EmailSubject = DefaultEmailSubject;
             IsBodyHtml = false;
-            RegionEndpoint = DefaultRegionEndpoint;
-            SignatureMethod = DefaultSignatureMethod;
         }
         /// <summary>
         /// The default subject used for email messages.
         /// </summary>
         public const string DefaultEmailSubject = "Log Email";
-
-        /// <summary>
-        /// The default region endpoint
-        /// </summary>
-        public static readonly RegionEndpoint DefaultRegionEndpoint = RegionEndpoint.USEast1;
-
-        /// <summary>
-        /// The default signature method
-        /// </summary>
-        public static readonly SigningAlgorithm DefaultSignatureMethod = SigningAlgorithm.HmacSHA256;
 
         /// <summary>
         /// The email address emails will be sent from.
@@ -64,23 +53,8 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         public bool IsBodyHtml { get; set; }
 
         /// <summary>
-        /// The AWS access key id
+        /// The Amazon SES Client
         /// </summary>
-        public string AwsAccessKeyId { get; set; }
-
-        /// <summary>
-        /// The AWS secret key
-        /// </summary>
-        public string AwsSecretKey { get; set; }
-
-        /// <summary>
-        /// The region endpoint to use for SES
-        /// </summary>
-        public RegionEndpoint RegionEndpoint { get; set; }
-
-        /// <summary>
-        /// The signing algorithm to use for SES
-        /// </summary>
-        public SigningAlgorithm SignatureMethod { get; set; }
+        public AmazonSimpleEmailServiceClient AmazonSimpleEmailServiceClient { get; set; }
     }
 }

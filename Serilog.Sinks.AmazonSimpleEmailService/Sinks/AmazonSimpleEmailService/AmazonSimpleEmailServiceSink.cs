@@ -56,11 +56,9 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         public AmazonSimpleEmailServiceSink(AmazonSimpleEmailServiceConfig config, int batchSizeLimit, TimeSpan period, ITextFormatter textFormatter)
             : base(batchSizeLimit, period)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
-
-            _config = config;
+            _config = config ?? throw new ArgumentNullException(nameof(config));
             _textFormatter = textFormatter;
-            _client = CreateClient();
+            _client = config.AmazonSimpleEmailServiceClient;
             _client.AfterResponseEvent += ClientOnAfterResponseEvent;
             _client.ExceptionEvent += ClientOnExceptionEvent;
         }
@@ -156,15 +154,5 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             await _client.SendEmailAsync(request);
         }
 #endif
-
-        private AmazonSimpleEmailServiceClient CreateClient()
-        {
-            var sesClient = new AmazonSimpleEmailServiceClient(new BasicAWSCredentials(_config.AwsAccessKeyId, _config.AwsSecretKey), new Amazon.SimpleEmail.AmazonSimpleEmailServiceConfig
-            {
-                RegionEndpoint = _config.RegionEndpoint,
-                SignatureMethod = _config.SignatureMethod
-            });
-            return sesClient;
-        }
     }
 }
