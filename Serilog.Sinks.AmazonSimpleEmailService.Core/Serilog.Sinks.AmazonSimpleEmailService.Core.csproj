@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>The periodic batching sink for Serilog</Description>
+    <Version>2.0.0</Version>
+    <Authors>Serilog Contributors</Authors>
+    <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Serilog.Sinks.AmazonSimpleEmailService</AssemblyName>
+    <RootNamespace>Serilog</RootNamespace>
+    <PackageId>Serilog.Sinks.AmazonSimpleEmailService</PackageId>
+    <PackageTags>serilog;ses</PackageTags>
+    <PackageIconUrl>http://serilog.net/images/serilog-sink-nuget.png</PackageIconUrl>
+    <PackageProjectUrl>http://serilog.net</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/chappoo/serilog-sinks-amazonses</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!-- Don't reference the full NETStandard.Library -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.6.3" />
+    <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>
