@@ -28,39 +28,55 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
 {
     public class AmazonSimpleEmailServiceSink : PeriodicBatchingSink
     {
-        private readonly AmazonSimpleEmailServiceClient _client;
-
-        private readonly ITextFormatter _textFormatter;
-
         /// <summary>
-        /// A reasonable default for the number of events posted in
-        /// each batch.
+        ///     A reasonable default for the number of events posted in
+        ///     each batch.
         /// </summary>
         public const int DefaultBatchPostingLimit = 100;
 
         /// <summary>
-        /// A reasonable default time to wait between checking for event batches.
+        ///     A reasonable default time to wait between checking for event batches.
         /// </summary>
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(30);
 
-        private readonly AmazonSimpleEmailServiceConfig _config;
+        private readonly AmazonSimpleEmailServiceClient _client;
+        private readonly string _emailFrom;
+        private readonly string _emailSubject;
+        private readonly string _emailTo;
+        private readonly bool _isBodyHtml;
+
+        private readonly ITextFormatter _textFormatter;
 
         /// <inheritdoc />
         /// <summary>
-        /// Construct a sink emailing via Amazon SES with the specified details.
+        ///     Construct a sink emailing via Amazon SES with the specified details.
         /// </summary>
-        /// <param name="config">Configuration used to construct the Amazon SES client and mail messages.</param>
+        /// <param name="isBodyHtml"></param>
         /// <param name="batchSizeLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="textFormatter">Supplies culture-specific formatting information, or null.</param>
-        public AmazonSimpleEmailServiceSink(AmazonSimpleEmailServiceConfig config, int batchSizeLimit, TimeSpan period, ITextFormatter textFormatter)
+        /// <param name="client"></param>
+        /// <param name="emailFrom"></param>
+        /// <param name="emailTo"></param>
+        /// <param name="emailSubject"></param>
+        public AmazonSimpleEmailServiceSink(AmazonSimpleEmailServiceClient client, 
+            string emailFrom,
+            string emailTo,
+            string emailSubject,
+            bool isBodyHtml,
+            int batchSizeLimit,
+            TimeSpan period,
+            ITextFormatter textFormatter)
             : base(batchSizeLimit, period)
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
-            _textFormatter = textFormatter;
-            _client = config.AmazonSimpleEmailServiceClient;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
             _client.AfterResponseEvent += ClientOnAfterResponseEvent;
             _client.ExceptionEvent += ClientOnExceptionEvent;
+            _emailFrom = emailFrom;
+            _emailTo = emailTo;
+            _emailSubject = emailSubject;
+            _isBodyHtml = isBodyHtml;
+            _textFormatter = textFormatter;
         }
 
         private static void ClientOnExceptionEvent(object sender, ExceptionEventArgs e)
@@ -75,10 +91,12 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
 
         /// <inheritdoc />
         /// <summary>
-        /// Free resources held by the sink.
+        ///     Free resources held by the sink.
         /// </summary>
-        /// <param name="disposing">If true, called because the object is being disposed; if false,
-        /// the object is being disposed from the finalizer.</param>
+        /// <param name="disposing">
+        ///     If true, called because the object is being disposed; if false,
+        ///     the object is being disposed from the finalizer.
+        /// </param>
         protected override void Dispose(bool disposing)
         {
             // First flush the buffer
@@ -96,22 +114,21 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
             var payload = new StringWriter();
 
             foreach (var logEvent in events)
-            {
                 _textFormatter.Format(logEvent, payload);
-            }
 
             var request = new SendEmailRequest
             {
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string>(_config.EmailTo.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    ToAddresses =
+                        new List<string>(_emailTo.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 },
-                Message = new Message(new Content(_config.EmailSubject), new Body
+                Message = new Message(new Content(_emailSubject), new Body
                 {
-                    Text = !_config.IsBodyHtml ? new Content(payload.ToString()) : null,
-                    Html = _config.IsBodyHtml ? new Content(payload.ToString()) : null
+                    Text = !_isBodyHtml ? new Content(payload.ToString()) : null,
+                    Html = _isBodyHtml ? new Content(payload.ToString()) : null
                 }),
-                Source = _config.EmailFrom
+                Source = _emailFrom
             };
 
             _client.SendEmail(request);
@@ -120,35 +137,41 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
 #if NET45
         /// <inheritdoc />
         /// <summary>
-        /// Emit a batch of log events, running asynchronously.
+        ///     Emit a batch of log events, running asynchronously.
         /// </summary>
         /// <param name="events">The events to emit.</param>
-        /// <remarks>Override either <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatch(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" /> or <see cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatchAsync(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />,
-        /// not both.</remarks>
+        /// <remarks>
+        ///     Override either
+        ///     <see
+        ///         cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatch(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />
+        ///     or
+        ///     <see
+        ///         cref="M:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink.EmitBatchAsync(System.Collections.Generic.IEnumerable{Serilog.Events.LogEvent})" />
+        ///     ,
+        ///     not both.
+        /// </remarks>
         protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
-
             if (events == null)
                 throw new ArgumentNullException(nameof(events));
             var payload = new StringWriter();
 
             foreach (var logEvent in events)
-            {
                 _textFormatter.Format(logEvent, payload);
-            }
 
             var request = new SendEmailRequest
             {
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string>(_config.EmailTo.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    ToAddresses =
+                        new List<string>(_emailTo.Split(",;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 },
-                Message = new Message(new Content(_config.EmailSubject), new Body
+                Message = new Message(new Content(_emailSubject), new Body
                 {
-                    Text = !_config.IsBodyHtml ? new Content(payload.ToString()) : null,
-                    Html = _config.IsBodyHtml ? new Content(payload.ToString()) : null
+                    Text = !_isBodyHtml ? new Content(payload.ToString()) : null,
+                    Html = _isBodyHtml ? new Content(payload.ToString()) : null
                 }),
-                Source = _config.EmailFrom
+                Source = _emailFrom
             };
 
             await _client.SendEmailAsync(request);

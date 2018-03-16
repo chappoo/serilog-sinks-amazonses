@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Amazon.SimpleEmail;
 using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting.Display;
@@ -23,15 +24,20 @@ namespace Serilog
     /// <summary>
     /// Adds the WriteTo.AmazonSimpleEmailService() extension method to <see cref="LoggerConfiguration"/>.
     /// </summary>
-    public static class LoggerConfigurationAmazonSimpleEmailServiceExtensions
+    public static class AmazonSimpleEmailServiceLoggerConfigurationExtensions
     {
         private const string DefaultOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
+        private const string DefaultEmailSubject = "Log Email";
 
         /// <summary>
         /// Adds a sink that sends log events via email.
         /// </summary>
         /// <param name="loggerConfiguration">The logger configuration.</param>
-        /// <param name="connection">The connection info used for </param>
+        /// <param name="amazonSimpleEmailServiceClient"></param>
+        /// <param name="emailFrom"></param>
+        /// <param name="emailTo"></param>
+        /// <param name="emailSubject"></param>
+        /// <param name="isBodyHtml"></param>
         /// <param name="outputTemplate">A message template describing the format used to write to the sink.
         /// the default is "{Timestamp} [{Level}] {Message}{NewLine}{Exception}".</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
@@ -42,20 +48,24 @@ namespace Serilog
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         public static LoggerConfiguration AmazonSimpleEmailService(
             this LoggerSinkConfiguration loggerConfiguration,
-            AmazonSimpleEmailServiceConfig connection,
+            AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient,
+            string emailFrom,
+            string emailTo,
+            string emailSubject = DefaultEmailSubject,
+            bool isBodyHtml = false,
             string outputTemplate = DefaultOutputTemplate,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchPostingLimit = AmazonSimpleEmailServiceSink.DefaultBatchPostingLimit,
             TimeSpan? period = null,
             IFormatProvider formatProvider = null)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (amazonSimpleEmailServiceClient == null) throw new ArgumentNullException(nameof(amazonSimpleEmailServiceClient));
 
             var defaultedPeriod = period ?? AmazonSimpleEmailServiceSink.DefaultPeriod;
             var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
 
             return loggerConfiguration.Sink(
-                new AmazonSimpleEmailServiceSink(connection, batchPostingLimit, defaultedPeriod, formatter),
+                new AmazonSimpleEmailServiceSink(amazonSimpleEmailServiceClient, emailFrom, emailTo, emailSubject, isBodyHtml, batchPostingLimit, defaultedPeriod, formatter),
                 restrictedToMinimumLevel);
         }
 
