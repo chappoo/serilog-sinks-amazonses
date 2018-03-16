@@ -11,13 +11,12 @@ Install-Package Serilog.Sinks.AmazonSimpleEmailService
 
 ```csharp
 var logger = new LoggerConfiguration()
-	.WriteTo.AmazonSimpleEmailService(new AmazonSimpleEmailServiceConfig
-    {
-        FromEmail = "no-reply@myapp.com",
-        EmailSubject = "MyApp Warnings / Errors",
-        AwsAccessKeyId = "AWSACCESSKEY",
-        AwsSecretKey = "AWSSECRETKEY",
-        ToEmail = "test@test.com"
-    }, restrictedToMinimumLevel: LogEventLevel.Warning)
+    .WriteTo.AmazonSimpleEmailService(
+        new AmazonSimpleEmailServiceClient(),
+        emailFrom = "no-reply@myapp.com",
+        emailTo = "test@test.com",
+        emailSubject = "MyApp Warnings / Errors",
+        restrictedToMinimumLevel: LogEventLevel.Warning
+    )
     .CreateLogger();
 ```
