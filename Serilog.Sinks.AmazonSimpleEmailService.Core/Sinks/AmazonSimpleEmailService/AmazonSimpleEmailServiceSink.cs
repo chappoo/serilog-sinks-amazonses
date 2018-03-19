@@ -26,16 +26,21 @@ using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.AmazonSimpleEmailService
 {
+    /// <summary>
+    /// Sends log events as emails via Amazon SimpleEmailService.
+    /// </summary>
+    /// <remarks>
+    /// Based on the <see cref="T:Serilog.Sinks.PeriodicBatching.PeriodicBatchingSink" />
+    /// </remarks>
     public class AmazonSimpleEmailServiceSink : PeriodicBatchingSink
     {
         /// <summary>
-        ///     A reasonable default for the number of events posted in
-        ///     each batch.
+        /// A reasonable default for the number of events posted in each batch.
         /// </summary>
         public const int DefaultBatchPostingLimit = 100;
 
         /// <summary>
-        ///     A reasonable default time to wait between checking for event batches.
+        /// A reasonable default time to wait between checking for event batches.
         /// </summary>
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(30);
 
@@ -47,9 +52,8 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
 
         private readonly ITextFormatter _textFormatter;
 
-        /// <inheritdoc />
         /// <summary>
-        ///     Construct a sink emailing via Amazon SES with the specified details.
+        /// Construct a sink emailing via Amazon SimpleEmailService with the specified details.
         /// </summary>
         /// <param name="isBodyHtml"></param>
         /// <param name="batchSizeLimit">The maximum number of events to post in a single batch.</param>
@@ -90,13 +94,6 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     Free resources held by the sink.
-        /// </summary>
-        /// <param name="disposing">
-        ///     If true, called because the object is being disposed; if false,
-        ///     the object is being disposed from the finalizer.
-        /// </param>
         protected override void Dispose(bool disposing)
         {
             // First flush the buffer
@@ -107,10 +104,6 @@ namespace Serilog.Sinks.AmazonSimpleEmailService
         }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     Emit a batch of log events, running asynchronously.
-        /// </summary>
-        /// <param name="events">The events to emit.</param>
         protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
             if (events == null)
