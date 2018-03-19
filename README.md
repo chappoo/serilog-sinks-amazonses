@@ -3,7 +3,7 @@
 Sends log events by Amazon SES.
 
 **Package** - [Serilog.Sinks.AmazonSimpleEmailService](https://www.nuget.org/packages/Serilog.Sinks.AmazonSimpleEmailService)
-| **Platforms** - .NET 4.5
+| **Platforms** - .NET 4.5, .NET Standard 1.3
 
 ```powershell
 Install-Package Serilog.Sinks.AmazonSimpleEmailService
