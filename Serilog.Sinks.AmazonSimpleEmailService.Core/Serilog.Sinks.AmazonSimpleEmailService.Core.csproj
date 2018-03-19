@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>The periodic batching sink for Serilog</Description>
+    <Description>Serilog event sink that sends email via Amazon SES</Description>
     <Version>2.0.0</Version>
     <Authors>Serilog Contributors</Authors>
     <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
@@ -12,7 +12,7 @@
     <AssemblyName>Serilog.Sinks.AmazonSimpleEmailService</AssemblyName>
     <RootNamespace>Serilog</RootNamespace>
     <PackageId>Serilog.Sinks.AmazonSimpleEmailService</PackageId>
-    <PackageTags>serilog;ses</PackageTags>
+    <PackageTags>serilog;logging;email;amazon;ses</PackageTags>
     <PackageIconUrl>http://serilog.net/images/serilog-sink-nuget.png</PackageIconUrl>
     <PackageProjectUrl>http://serilog.net</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
